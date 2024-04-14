@@ -7,3 +7,4 @@
 /home/schnitzel/Coding/LethalCompanyMods/LCSaveEditor/obj/Debug/netstandard2.1/LCSaveEditor.AssemblyInfo.cs
 /home/schnitzel/Coding/LethalCompanyMods/LCSaveEditor/obj/Debug/netstandard2.1/LCSaveEditor.csproj.CoreCompileInputs.cache
 /home/schnitzel/Coding/LethalCompanyMods/LCSaveEditor/obj/Debug/netstandard2.1/Like4Schnitzel.LCSaveEditor.dll
+/home/schnitzel/Coding/LethalCompanyMods/LCSaveEditor/obj/Debug/netstandard2.1/LCSaveEditor.sourcelink.json

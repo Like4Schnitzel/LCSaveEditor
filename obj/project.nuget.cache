@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "7qvwHhL3ufOWthfKzfGKEvIKJPbRmiDUVUqJA6QT+WLZ4Tg5Z6n4kAeGd0dZXNi5cwgrZnUd9K65Hii+lSxOoQ==",
+  "dgSpecHash": "0fxRiNzT7wV5cM5uj2+Yiv01198Zz2L41XQCL6XJqALt59FnwNrJLA/0Rmt1KBEClIG0asaDoZztFeAIuXXqHA==",
   "success": true,
   "projectFilePath": "/home/schnitzel/Coding/LethalCompanyMods/LCSaveEditor/LCSaveEditor.csproj",
   "expectedPackageFiles": [
     "/home/schnitzel/.nuget/packages/bepinex.analyzers/1.0.8/bepinex.analyzers.1.0.8.nupkg.sha512",
+    "/home/schnitzel/.nuget/packages/bepinex.assemblypublicizer.msbuild/0.4.1/bepinex.assemblypublicizer.msbuild.0.4.1.nupkg.sha512",
     "/home/schnitzel/.nuget/packages/bepinex.baselib/5.4.20/bepinex.baselib.5.4.20.nupkg.sha512",
     "/home/schnitzel/.nuget/packages/bepinex.core/5.4.21/bepinex.core.5.4.21.nupkg.sha512",
     "/home/schnitzel/.nuget/packages/bepinex.plugininfoprops/2.1.0/bepinex.plugininfoprops.2.1.0.nupkg.sha512",

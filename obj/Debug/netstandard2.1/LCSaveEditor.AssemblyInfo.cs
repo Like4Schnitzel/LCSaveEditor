@@ -10,10 +10,12 @@
 using System;
 using System.Reflection;
 
+[assembly: System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute("Assembly-CSharp")]
+[assembly: System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute("UnityEngine")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Like4Schnitzel.LCSaveEditor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0edeaf8fcec1cba6154cec2ad613f9423b871903")]
 [assembly: System.Reflection.AssemblyProductAttribute("LCSaveEditor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Like4Schnitzel.LCSaveEditor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
