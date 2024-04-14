@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = LCSaveEditor
+build_property.ProjectDir = /home/schnitzel/Coding/LethalCompanyMods/LCSaveEditor/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
