@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using LCSaveEditor.Patches;
 using LobbyCompatibility.Attributes;
 using LobbyCompatibility.Enums;
 
@@ -32,6 +33,7 @@ public class LCSaveEditor : BaseUnityPlugin
         Logger.LogDebug("Patching...");
 
         Harmony.PatchAll();
+        Harmony.CreateAndPatchAll(typeof(MenuManagerPatch));
 
         Logger.LogDebug("Finished patching!");
     }
