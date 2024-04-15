@@ -39,21 +39,21 @@ public class LCSaveEditor : BaseUnityPlugin
             return;
         }
 
-        var menuContainer = GameObject.Find("MenuContainer");
-        var lobbyHostSettings = menuContainer.transform.GetChild(4).gameObject;
+        GameObject menuContainer = GameObject.Find("MenuContainer");
+        GameObject lobbyHostSettings = menuContainer.transform.Find("LobbyHostSettings").gameObject;
 
         Debug.Log("Initializing FileEditor");
 
         // use the Host Settings screen as a template
         FileEditor = Instantiate(lobbyHostSettings, parent: menuContainer.transform);
         FileEditor.name = "FileEditor";
-        Transform filesPanel = FileEditor.transform.GetChild(3);
-        Transform hostSettingsContainer = FileEditor.transform.GetChild(1);
+        Transform filesPanel = FileEditor.transform.Find("FilesPanel");
+        Transform hostSettingsContainer = FileEditor.transform.Find("HostSettingsContainer");
         // center the FilesPanel by copying the HostSettingsContainer's position
         filesPanel.transform.position = hostSettingsContainer.transform.position;
 
         // add the Back button to the FilesPanel
-        Transform back = hostSettingsContainer.GetChild(4);
+        Transform back = hostSettingsContainer.Find("Back");
         back.SetParent(filesPanel, worldPositionStays: false);
         // modify the function of the Back button to instead disable our new thing
         Button backButton = back.GetComponent<Button>();
@@ -72,14 +72,14 @@ public class LCSaveEditor : BaseUnityPlugin
         Destroy(hostSettingsContainer.gameObject);
 
         // set the title lable
-        filesPanel.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Select a file:";
+        filesPanel.Find("EnterAName").GetComponent<TextMeshProUGUI>().text = "Select a file:";
 
         // remove the delete buttons
         // and assign event handlers while we're at it
         for (int i = 1; i <= 3; i++)
         {
-            Transform file = filesPanel.GetChild(i);
-            Destroy(file.GetChild(3).gameObject);
+            Transform file = filesPanel.Find($"File{i}");
+            Destroy(file.Find("DeleteButton").gameObject);
 
             Button fileButton = file.GetComponent<Button>();
             fileButton.onClick.RemoveAllListeners();
@@ -90,7 +90,7 @@ public class LCSaveEditor : BaseUnityPlugin
         }
 
         // remove the ChallengeLeaderboard
-        Destroy(FileEditor.transform.GetChild(1).gameObject);
+        Destroy(FileEditor.transform.Find("ChallengeLeaderboard").gameObject);
     }
 
     public static void EditFile(int index)

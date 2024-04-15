@@ -7,8 +7,6 @@ namespace LCSaveEditor.Patches;
 
 class MenuManagerPatch
 {
-    private static int ButtonIndex { get; } = 4;
-
     [HarmonyPatch(typeof(MenuManager), nameof(MenuManager.Start))]
     [HarmonyPostfix]
     private static void MenuManager_Start(MenuManager __instance)
@@ -21,25 +19,30 @@ class MenuManagerPatch
         }
 
         // clone a button and modify the copy
-        GameObject templateButton = mainButtons.transform.GetChild(1).gameObject;
-        GameObject saveFileButton = Object.Instantiate(templateButton, parent: mainButtons.transform);
-        saveFileButton.name = "SaveFileButton";
-        if (saveFileButton.transform.childCount < 2)
+        GameObject? templateButton = mainButtons.transform.Find("HostButton")?.gameObject;
+        // same reason we check above
+        if (templateButton == null || templateButton.transform.childCount < 2)
         {
             return;
         }
-        saveFileButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "> Edit save files";
+        GameObject saveFileButton = Object.Instantiate(templateButton, parent: mainButtons.transform);
+        saveFileButton.name = "SaveFileButton";
+        saveFileButton.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = "> Edit save files";
+
         // we'll put it right above the settings button
-        saveFileButton.transform.position = mainButtons.transform.GetChild(ButtonIndex).transform.position;
+        Transform settingsButton = mainButtons.transform.Find("SettingsButton");
+        int ButtonIndex = settingsButton.GetSiblingIndex();
+        saveFileButton.transform.position = settingsButton.position;
         saveFileButton.transform.SetSiblingIndex(ButtonIndex);
 
-        var saveFileButtonButton = saveFileButton.GetComponent<Button>();
+        Button saveFileButtonButton = saveFileButton.GetComponent<Button>();
         saveFileButtonButton.onClick.RemoveAllListeners();
         saveFileButtonButton.onClick.AddListener(ClickSaveFileButton);
 
         // now we push everything above the settings button (including newButton) up to avoid overlap
         // for this we get the vertical space between the Credits and Quit button as a reference
-        var vertSpace = mainButtons.transform.GetChild(6).transform.position.y - mainButtons.transform.GetChild(7).transform.position.y;
+        float vertSpace = mainButtons.transform.Find("Credits").transform.position.y - mainButtons.transform.Find("QuitButton").transform.position.y;
+        // don't move the child at index 0 since that's the HeaderImage
         for (int i = ButtonIndex; i >= 1; i--)
         {
             mainButtons.transform.GetChild(i).transform.position += new Vector3(0, vertSpace, 0);
