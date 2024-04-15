@@ -24,6 +24,10 @@ class MenuManagerPatch
         GameObject templateButton = mainButtons.transform.GetChild(1).gameObject;
         GameObject saveFileButton = Object.Instantiate(templateButton, parent: mainButtons.transform);
         saveFileButton.name = "SaveFileButton";
+        if (saveFileButton.transform.childCount < 2)
+        {
+            return;
+        }
         saveFileButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "> Edit save files";
         // we'll put it right above the settings button
         saveFileButton.transform.position = mainButtons.transform.GetChild(ButtonIndex).transform.position;
@@ -40,10 +44,14 @@ class MenuManagerPatch
         {
             mainButtons.transform.GetChild(i).transform.position += new Vector3(0, vertSpace, 0);
         }
+
+        LCSaveEditor.InitFileEditor();
     }
 
     public static void ClickSaveFileButton()
     {
-        Debug.Log("Save File button was clicked.");
+        Debug.Log("save file button pressed");
+        
+        LCSaveEditor.FileEditor?.SetActive(true);
     }
 }
