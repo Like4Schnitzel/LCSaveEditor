@@ -1,10 +1,10 @@
-using System;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using LCSaveEditor.Patches;
 using LobbyCompatibility.Attributes;
 using LobbyCompatibility.Enums;
+using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -75,13 +75,35 @@ public class LCSaveEditor : BaseUnityPlugin
         filesPanel.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Select a file:";
 
         // remove the delete buttons
+        // and assign event handlers while we're at it
         for (int i = 1; i <= 3; i++)
         {
-            Destroy(filesPanel.GetChild(i).GetChild(3).gameObject);
+            Transform file = filesPanel.GetChild(i);
+            Destroy(file.GetChild(3).gameObject);
+
+            Button fileButton = file.GetComponent<Button>();
+            fileButton.onClick.RemoveAllListeners();
+            // for some reason passing i to EditFile here would have it take a reference of i
+            // hence, to avoid always calling EditFile(4), we make a copy of i here
+            int iCopy = i;
+            fileButton.onClick.AddListener( () => EditFile(iCopy) );
         }
 
         // remove the ChallengeLeaderboard
         Destroy(FileEditor.transform.GetChild(1).gameObject);
+    }
+
+    public static void EditFile(int index)
+    {
+        string filePath = $"LCSaveFile{index}";
+        if (!ES3.FileExists(filePath))
+        {
+            Debug.Log($"{filePath} does not exist.");
+            return;
+        }
+
+        JObject data = JObject.Parse(ES3.LoadRawString(filePath));
+        Debug.Log(data);
     }
 
     internal static void Patch()
