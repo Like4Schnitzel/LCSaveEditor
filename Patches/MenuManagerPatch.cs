@@ -48,13 +48,15 @@ class MenuManagerPatch
             mainButtons.transform.GetChild(i).transform.position += new Vector3(0, vertSpace, 0);
         }
 
-        LCSaveEditor.InitFileEditor();
+        LCSaveEditor.InitFileSelector();
+        LCSaveEditor.InitFileEditScreen();
+        LCSaveEditor.InitSFPropsListItem();
     }
 
     public static void ClickSaveFileButton()
     {
         Debug.Log("save file button pressed");
         
-        LCSaveEditor.FileEditor?.SetActive(true);
+        LCSaveEditor.FileSelector?.SetActive(true);
     }
 }
