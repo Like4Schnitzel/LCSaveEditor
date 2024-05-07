@@ -90,10 +90,31 @@ public class LCSaveEditor : BaseUnityPlugin
             Button fileButton = file.GetComponent<Button>();
             fileButton.onClick.RemoveAllListeners();
             // for some reason passing i to EditFile here would have it take a reference of i
-            // hence, to avoid always calling EditFile(4), we make a copy of i here
+            // hence, to avoid always calling EditFile("LCSaveFile4"), we make a copy of i here
             int iCopy = i;
-            fileButton.onClick.AddListener( () => EditFile(iCopy) );
+            fileButton.onClick.AddListener( () => EditFile("LCSaveFile" + iCopy) );
         }
+
+        // add a fourth button for the general save data
+        Transform templateButton = filesPanel.Find("File1");
+        var generalButton = Instantiate(templateButton, parent: filesPanel);
+        generalButton.name = "FileGeneral";
+        generalButton.GetComponentInChildren<TextMeshProUGUI>().text = "General Data";
+        Destroy(generalButton.Find("StatsText").gameObject);
+
+        Button generalButtonButton = generalButton.GetComponent<Button>();
+        generalButtonButton.onClick.RemoveAllListeners();
+        generalButtonButton.onClick.AddListener( () => EditFile("LCGeneralSaveData") );
+
+        // move all other buttons down
+        // for this, get the vertical space between two file buttons
+        float vertSpace = filesPanel.Find("File1").transform.position.y - filesPanel.Find("File2").transform.position.y;
+        for (int i = 1; i <= 3; i++)
+        {
+            Transform file = filesPanel.Find($"File{i}");
+            file.position -= new Vector3(0, vertSpace, 0);
+        }
+        filesPanel.Find("Back").position -= new Vector3(0, vertSpace, 0);
 
         // remove the ChallengeLeaderboard
         Destroy(FileSelector.transform.Find("ChallengeLeaderboard").gameObject);
@@ -164,10 +185,11 @@ public class LCSaveEditor : BaseUnityPlugin
         Transform editButton = SFPropsListItem.transform.Find("JoinButton");
         editButton.name = "EditButton";
         editButton.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = "Edit";
+        editButton.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().maxVisibleLines = 1;
         editButton.GetComponent<Button>().onClick.RemoveAllListeners();
     }
 
-    public static void EditFile(int index)
+    public static void EditFile(string path)
     {
         if (FileEditScreen == null)
         {
@@ -180,14 +202,13 @@ public class LCSaveEditor : BaseUnityPlugin
             return;
         }
 
-        string filePath = $"LCSaveFile{index}";
-        if (!ES3.FileExists(filePath))
+        if (!ES3.FileExists(path))
         {
-            Debug.Log($"{filePath} does not exist.");
+            Debug.Log($"{path} does not exist.");
             return;
         }
 
-        var data = JObject.Parse(ES3.LoadRawString(filePath));
+        var data = JObject.Parse(ES3.LoadRawString(path));
         string[] keys = new string[data.Count];
         int i = 0;
         float slotPositionOffset = 0;
@@ -203,16 +224,21 @@ public class LCSaveEditor : BaseUnityPlugin
             item.transform.Find("Key").GetComponent<TextMeshProUGUI>().text = kv.Key;
 
             string valueString;
-            var value = ES3.Load(kv.Key, filePath: filePath);
+            var value = ES3.Load(kv.Key, filePath: path);
             if (value != null && value.GetType().IsArray)
             {
-                System.Collections.IEnumerable valueEnumerable = value as System.Collections.IEnumerable;
+                System.Collections.IEnumerable? valueEnumerable = value as System.Collections.IEnumerable;
                 valueString = "{";
                 foreach (var elem in valueEnumerable!)
                 {
                     valueString += elem + ", ";
+                    if (valueString.Length > 35)
+                    {
+                        valueString += "..., ";
+                        break;
+                    }
                 }
-                valueString += "}";
+                valueString = valueString.Substring(0, valueString.Length-2) + "}";
             }
             else
             {
@@ -223,7 +249,7 @@ public class LCSaveEditor : BaseUnityPlugin
 
         Debug.Log($"SaveFile keys are: {String.Join(" ", keys)}");
 
-        FileEditScreen.transform.Find("ListPanel").Find("ListHeader").GetComponent<TextMeshProUGUI>().text = $"File {index}";
+        FileEditScreen.transform.Find("ListPanel").Find("ListHeader").GetComponent<TextMeshProUGUI>().text = path;
         FileEditScreen.SetActive(true);
         FileSelector?.SetActive(false);
         GameObject.Find("MenuContainer")?.transform.Find("MainButtons").gameObject.SetActive(false);
